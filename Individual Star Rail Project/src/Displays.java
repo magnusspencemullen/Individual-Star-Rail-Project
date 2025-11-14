@@ -1,18 +1,25 @@
 import java.util.Scanner;
-public class PlayHSR
+import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
+public class Displays
 	{
-	static String playerButtonInput;
-	static String playerButtonInput1;
-	static Scanner userStringInput = new Scanner(System.in);
-	static Player player = new Player("Hero", 15, 100, 0);//100);
-	static Player player2 = new Player("Support", 15, 100, 0); //95);
-	static Player enemy = new Player("Monster", 15, 100, 0); //80);
-	static int skillPoints = 1;
-	static int maxSkillPoints = 3;
-	static boolean stillPicking=true;
-	static double multiplier = 0;
-	static double adjMultiplier = 0;
-	static double aoeMultiplier = 0;
+	public static String playerButtonInput;
+	public static String playerButtonInput1;
+	public static Scanner userStringInput = new Scanner(System.in);
+	public static Player player = new Player("Hero", 15, 100, 0, 100);
+	public static Player player2 = new Player("Support", 15, 100, 0, 95);
+	public static Player enemy = new Player("Monster", 15, 100, 0, 90);
+	public static int skillPoints = 1;
+	public static int maxSkillPoints = 3;
+	public static boolean stillPicking=true;
+	public static double multiplier = 0;
+	public static double adjMultiplier = 0;
+	public static double aoeMultiplier = 0;
+	public static SpeedSorter sorter = new SpeedSorter();
+	public static Player p1 = player;
+	public static Player p2 = player2;
+
 	public static void displayBoard() 
 		{
 	    System.out.println("      "+enemy.getName()+"          HP: "+enemy.getHealthStat());
@@ -59,6 +66,7 @@ public class PlayHSR
 				System.out.println("The enemy took "+player.getAttackStat()*multiplier+" damage");
 				enemy.setHealthStat(enemy.getHealthStat()-player.getAttackStat()*multiplier);
 				player.setCharge(player.getCharge()+25);
+				player.setSpeed(player.getSpeed()+25);
 				if (skillPoints<maxSkillPoints)
 					{
 					skillPoints+=1;
@@ -126,7 +134,7 @@ public class PlayHSR
 		{
 		System.out.println(enemy.getName()+" HP: "+enemy.getHealthStat());
 		System.out.println(enemy.getName()+" ATK: "+enemy.getAttackStat());
-	//	System.out.println(enemy.getSpeed()+" SPD: "+enemy.getSpeed());
+		System.out.println(enemy.getSpeed()+" SPD: "+enemy.getSpeed());
 		System.out.println("---------------------------------");
 		System.out.println("Team Skill Points: "+skillPoints+"/"+maxSkillPoints);
 		System.out.println(player.getName()+" HP: "+player.getHealthStat()); 
@@ -137,5 +145,50 @@ public class PlayHSR
 		System.out.println(player.getName()+" Basic ATK: Deals 100% of "+player.getName()+"'s ATK to one enemy");
 		System.out.println(player.getName()+" Skill: Deals 200% of "+player.getName()+"'s ATK to one enemy and 100% of "+player.getName()+"'s ATK to adjacent enemies. Expends 1 skill point.");
 		System.out.println(player.getName()+" Ultimate: Deals 300% of "+player.getName()+"'s ATK to one enemy and 150% of "+player.getName()+"'s ATK to adjacent enemies. Expends 100 charge.");
+		}
+	public static void sortDisplay()
+		{
+		List<Player> players = Arrays.asList(player, player2, enemy);
+	    Collections.sort(players, sorter);
+	    System.out.println("=== Sorted by Speed (Fastest -> Slowest) ===");
+	    for (Player p : players) {
+	        System.out.println(p.getName() + " - SPD: " + p.getSpeed());
+	    }
+	    System.out.println("===========================================");
+		}
+	public static void processTurnOrder()
+		{
+		List<Player> turnOrder = Arrays.asList(player, player2, enemy);
+	    Collections.sort(turnOrder, sorter);
+	    System.out.println("TURN ORDER:");
+	    for (Player p : turnOrder) 
+	    	{
+	        System.out.println("  " + p.getName() + " (SPD " + p.getSpeed() + ")");
+	    	}
+	    System.out.println("----------------------------------");
+	    for (Player p : turnOrder) 
+	    	{
+	        if (p == player) 
+	        	{
+	            System.out.println(p.getName()+"'s turn!");
+	            displayBoard();
+	            displayButtons();
+	            takeAction();
+	        	} 
+	        else if (p == enemy) 
+	        	{
+	            System.out.println(p.getName()+"'s turn!");
+	            displayBoard();
+	            enemyTurn();
+	        	}
+	        else if (p == player2) 
+	        	{
+	            System.out.println(p.getName()+"'s turn!");
+	            displayBoard();
+	            displayButtons();
+	            takeAction();
+	        	}
+	        checkDeath();
+	    	}
 		}
 	}

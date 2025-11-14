@@ -4,14 +4,14 @@ public class Player
 	private double attackStat;
 	private double healthStat;
 	private int charge;
-	//private double speed;
-	public Player(String n, double a, double h, int c)//double s)
+	private double speed;
+	public Player(String n, double a, double h, int c, double s)
 		{
 		name = n;
 		attackStat = a;
 		healthStat = h;
 		charge = c;
-		//speed = s;
+		speed = s;
 		}
 	public String getName()
 		{
@@ -51,14 +51,14 @@ public class Player
 		{
 		this.charge =charge;
 		}
-//	public double getSpeed()
-//		{
-//		return speed;
-//		}
-//
-//	public void setSpeed(double speed)
-//		{
-//		this.speed = speed;
-//		}
+	public double getSpeed()
+		{
+		return speed;
+		}
+
+	public void setSpeed(double speed)
+		{
+		this.speed = speed;
+		}
 
 	}
