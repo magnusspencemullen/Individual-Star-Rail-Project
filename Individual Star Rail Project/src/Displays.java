@@ -29,8 +29,8 @@ public class Displays
 	    System.out.println("       | M |");
 	    System.out.println("        vs           Skill Points:"+skillPoints+"/"+maxSkillPoints);
 	    System.out.println("    | H || S |");
-	    System.out.println("        "+player.getName()+"         HP: "+player.getHealthStat()+" | Charge: "+player.getCharge()+"/100");
-	    System.out.println("       "+player2.getName()+"       HP: "+player2.getHealthStat()+" | Charge: "+player2.getCharge()+"/100");
+	    System.out.println("                "+player.getName()+" HP: "+player.getHealthStat()+" | Charge: "+player.getCharge()+"/100");
+	    System.out.println("             "+player2.getName()+" HP: "+player2.getHealthStat()+" | Charge: "+player2.getCharge()+"/100");
 	    System.out.println();
 		}
 	public static void displayButtons()
