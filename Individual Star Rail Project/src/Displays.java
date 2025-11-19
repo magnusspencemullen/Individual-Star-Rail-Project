@@ -6,10 +6,12 @@ public class Displays
 	{
 	public static String playerButtonInput;
 	public static String playerButtonInput1;
+	public static int playerSkillSelectInput;
 	public static Scanner userStringInput = new Scanner(System.in);
+	public static Scanner userIntInput = new Scanner(System.in);
 	public static Player player = new Player("Hero", 15, 100, 0, 100);
-	public static Player player2 = new Player("Support", 15, 100, 0, 95);
-	public static Player enemy = new Player("Monster", 15, 100, 0, 90);
+	public static Player player2 = new Player("Support", 20, 100, 0, 95);
+	public static Player enemy = new Player("Monster", 25, 100, 0, 90);
 	public static int skillPoints = 1;
 	public static int maxSkillPoints = 3;
 	public static boolean stillPicking=true;
@@ -19,14 +21,16 @@ public class Displays
 	public static SpeedSorter sorter = new SpeedSorter();
 	public static Player p1 = player;
 	public static Player p2 = player2;
+	public static boolean stillPickingSkill=true;
 
 	public static void displayBoard() 
 		{
-	    System.out.println("      "+enemy.getName()+"          HP: "+enemy.getHealthStat());
-	    System.out.println("       | X |");
-	    System.out.println("        vs          Skill Points:"+skillPoints+"/"+maxSkillPoints);
-	    System.out.println("       | O |       Charge: "+player.getCharge()+"/100");
-	    System.out.println("        "+player.getName()+"           HP: "+player.getHealthStat());
+	    System.out.println("      "+enemy.getName()+"        HP: "+enemy.getHealthStat());
+	    System.out.println("       | M |");
+	    System.out.println("        vs           Skill Points:"+skillPoints+"/"+maxSkillPoints);
+	    System.out.println("    | H || S |");
+	    System.out.println("        "+player.getName()+"         HP: "+player.getHealthStat()+" | Charge: "+player.getCharge()+"/100");
+	    System.out.println("       "+player2.getName()+"       HP: "+player2.getHealthStat()+" | Charge: "+player2.getCharge()+"/100");
 	    System.out.println();
 		}
 	public static void displayButtons()
@@ -45,15 +49,21 @@ public class Displays
 	        	System.out.println("Insufficient skill points, try again!");
 				System.out.println("_________________________________");
 	        	}
-	        else if (playerButtonInput.equalsIgnoreCase("T") && player.getCharge()<100)
+	        else if (playerButtonInput.equalsIgnoreCase("T") && player.getCharge()<100 && player2.getCharge()<100
+	        		)
 	        	{
 	        	System.out.println("Insufficient charge, try again!");
 				System.out.println("_________________________________");
 	        	}
-	        else
+	        else if (playerButtonInput.equalsIgnoreCase("Q") || playerButtonInput.equalsIgnoreCase("I") || playerButtonInput.equalsIgnoreCase("E") || playerButtonInput.equalsIgnoreCase("T"))
 		        {
 		        break;
 		        }
+	        else
+	        	{
+	        	System.out.println("Wrong input! Please enter Q, E, T, or I.");
+	            System.out.println("_________________________________");
+	        	}
 		    }
 		}
 	public static void takeAction()
@@ -66,7 +76,7 @@ public class Displays
 				System.out.println("The enemy took "+player.getAttackStat()*multiplier+" damage");
 				enemy.setHealthStat(enemy.getHealthStat()-player.getAttackStat()*multiplier);
 				player.setCharge(player.getCharge()+25);
-				player.setSpeed(player.getSpeed()+25);
+				//player.setSpeed(player.getSpeed()+25);
 				if (skillPoints<maxSkillPoints)
 					{
 					skillPoints+=1;
@@ -102,13 +112,15 @@ public class Displays
 		{
 		if(enemy.getHealthStat()<=0)
 			{
-			System.out.println("You've defeated the enemy! GG");
+			System.out.println("You've defeated the enemy! Good game.");
 			IndividualSRProject.stillPlaying=false;
+			System.exit(0);
 			}
-		if(player.getHealthStat()<=0)
+		if(player.getHealthStat()<=0 || player2.getHealthStat()<=0)
 			{
-			System.out.println("You died! GG");
+			System.out.println("You died! Good game.");
 			IndividualSRProject.stillPlaying=false;
+			System.exit(0);
 			}
 		}
 	public static void enemyTurn()
@@ -116,17 +128,48 @@ public class Displays
 		int enemyChoice=(int)(Math.random()*2);
 		if (enemyChoice==0)
 			{
-			multiplier=1;
-			player.setHealthStat(player.getHealthStat()-enemy.getAttackStat()*multiplier);
-			System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to you");
-			player.setCharge(player.getCharge()+5);
+			int enemyTargetChoice=(int)(Math.random()*3);
+			if (enemyTargetChoice==0)
+				{
+				multiplier=1;
+				player.setHealthStat(player.getHealthStat()-enemy.getAttackStat()*multiplier);
+				System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to "+player.getName());
+				player.setCharge(player.getCharge()+5);
+				}
+			else if (enemyTargetChoice==1)
+				{
+				multiplier=1;
+				player2.setHealthStat(player2.getHealthStat()-enemy.getAttackStat()*multiplier);
+				System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to "+player2.getName());
+				player2.setCharge(player2.getCharge()+5);
+				}
+			else if (enemyTargetChoice==2)
+				{
+				multiplier=1;
+				player.setHealthStat(player.getHealthStat()-enemy.getAttackStat()*multiplier);
+				player2.setHealthStat(player2.getHealthStat()-enemy.getAttackStat()*multiplier);
+				System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to "+player.getName()+" and "+player2.getName());
+				player.setCharge(player.getCharge()+5);
+				player2.setCharge(player2.getCharge()+5);
+				}
 			}
 		else
 			{
-			multiplier=2;
-			player.setHealthStat(player.getHealthStat()-enemy.getAttackStat()*multiplier);
-			System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to you");
-			player.setCharge(player.getCharge()+10);
+			int enemyTargetChoice=(int)(Math.random()*2);
+			if (enemyTargetChoice==0)
+				{
+				multiplier=2;
+				player.setHealthStat(player.getHealthStat()-enemy.getAttackStat()*multiplier);
+				System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to "+player.getName());
+				player.setCharge(player.getCharge()+10);
+				}
+			else
+				{
+				multiplier=2;
+				player2.setHealthStat(player2.getHealthStat()-enemy.getAttackStat()*multiplier);
+				System.out.println("The enemy dealt "+enemy.getAttackStat()*multiplier+" damage to "+player2.getName());
+				player2.setCharge(player2.getCharge()+10);
+				}
 			}
 		System.out.println("---------------------------------");
 		}
@@ -134,17 +177,26 @@ public class Displays
 		{
 		System.out.println(enemy.getName()+" HP: "+enemy.getHealthStat());
 		System.out.println(enemy.getName()+" ATK: "+enemy.getAttackStat());
-		System.out.println(enemy.getSpeed()+" SPD: "+enemy.getSpeed());
+		System.out.println(enemy.getName()+" SPD: "+enemy.getSpeed());
 		System.out.println("---------------------------------");
 		System.out.println("Team Skill Points: "+skillPoints+"/"+maxSkillPoints);
 		System.out.println(player.getName()+" HP: "+player.getHealthStat()); 
 		System.out.println(player.getName()+" ATK: "+player.getAttackStat());
 		System.out.println(player.getName()+" charge: "+player.getCharge()+"/100");
+		System.out.println(player.getName()+" SPD: "+player.getSpeed());
 		System.out.println("---------------------------------");
+		System.out.println(player2.getName()+" HP: "+player2.getHealthStat()); 
+		System.out.println(player2.getName()+" ATK: "+player2.getAttackStat());
+		System.out.println(player2.getName()+" charge: "+player2.getCharge()+"/100");
+		System.out.println(player2.getName()+" SPD: "+player2.getSpeed());
 		System.out.println(" - Descriptions -");
-		System.out.println(player.getName()+" Basic ATK: Deals 100% of "+player.getName()+"'s ATK to one enemy");
-		System.out.println(player.getName()+" Skill: Deals 200% of "+player.getName()+"'s ATK to one enemy and 100% of "+player.getName()+"'s ATK to adjacent enemies. Expends 1 skill point.");
-		System.out.println(player.getName()+" Ultimate: Deals 300% of "+player.getName()+"'s ATK to one enemy and 150% of "+player.getName()+"'s ATK to adjacent enemies. Expends 100 charge.");
+		System.out.println(player.getName()+" Basic ATK: Deals 100% of "+player.getName()+"'s ATK to one enemy.");
+		System.out.println(player.getName()+" Skill: Deals 200% of "+player.getName()+"'s ATK to one enemy and 100% of "+player.getName()+"'s ATK to one enemy. Expends 1 skill point.");
+		System.out.println(player.getName()+" Ultimate: Deals 300% of "+player.getName()+"'s ATK to one enemy and 150% of "+player.getName()+"'s ATK to one enemy. Expends 100 charge.");
+		System.out.println("---------------------------------");
+		System.out.println(player2.getName()+" Basic ATK: Deals 100% of "+player2.getName()+"'s ATK to one enemy");
+		System.out.println(player2.getName()+" Skill: Heals one chosen ally with 100% of "+player2.getName()+"'s ATK. Expends 1 skill point.");
+		System.out.println(player2.getName()+" Ultimate: Heals all allies with 225% of "+player2.getName()+"'s ATK. Expends 100 charge.");	
 		}
 	public static void sortDisplay()
 		{
@@ -186,9 +238,71 @@ public class Displays
 	            System.out.println(p.getName()+"'s turn!");
 	            displayBoard();
 	            displayButtons();
-	            takeAction();
+	            SupportTakeAction();
 	        	}
 	        checkDeath();
 	    	}
 		}
+	public static void SupportTakeAction()
+		{
+			if (playerButtonInput.equalsIgnoreCase("Q"))
+				{
+				multiplier = 1;
+				System.out.println("Used Basic Attack");
+				System.out.println("_________________________________");
+				System.out.println("The enemy took "+player2.getAttackStat()*multiplier+" damage");
+				enemy.setHealthStat(enemy.getHealthStat()-player2.getAttackStat()*multiplier);
+				player2.setCharge(player2.getCharge()+25);
+				//player.setSpeed(player.getSpeed()+25);
+				if (skillPoints<maxSkillPoints)
+					{
+					skillPoints+=1;
+					}
+				else
+					{
+					}
+				}
+			else if (playerButtonInput.equalsIgnoreCase("E") && skillPoints>0)
+				{
+				multiplier = 1;
+				adjMultiplier = 1;
+				System.out.println("Used Skill");
+				System.out.println("_________________________________");
+				while (stillPickingSkill==true)
+					{
+					System.out.println("Who do you target? |1|"+player.getName()+", |2|"+player2.getName());
+					playerSkillSelectInput=userIntInput.nextInt();
+					if(playerSkillSelectInput==1)
+						{
+						System.out.println(player.getName()+" was healed for "+player2.getAttackStat()*multiplier);
+						player.setHealthStat(player.getHealthStat()+player2.getAttackStat()*multiplier);
+						break;
+						}
+					else if(playerSkillSelectInput==2)
+						{
+						System.out.println(player2.getName()+" was healed for "+player2.getAttackStat()*multiplier);
+						player2.setHealthStat(player2.getHealthStat()+player2.getAttackStat()*multiplier);
+						break;
+						}
+					else
+						{
+						System.out.println("Wrong input! Try again.");
+						}
+					}
+				player2.setCharge(player2.getCharge()+35);
+				skillPoints-=1;
+				}
+			else if (playerButtonInput.equalsIgnoreCase("T") && player2.getCharge()>=100)
+				{
+				multiplier = 3;
+				adjMultiplier = 1.5;
+				System.out.println("Used Ultimate");
+				System.out.println("_________________________________");
+				System.out.println(player2.getName()+" healed all allies for "+player2.getAttackStat()*multiplier);
+				player.setHealthStat(player.getHealthStat()+player2.getAttackStat()*multiplier);
+				player2.setHealthStat(player2.getHealthStat()+player2.getAttackStat()*multiplier);
+				player2.setCharge(player2.getCharge()-100);
+				player2.setCharge(player2.getCharge()+25);
+				}
+			}
 	}
