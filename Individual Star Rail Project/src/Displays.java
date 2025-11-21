@@ -22,6 +22,7 @@ public class Displays
 	public static Player p1 = player;
 	public static Player p2 = player2;
 	public static boolean stillPickingSkill=true;
+	public static boolean stillPrinting=false;
 
 	public static void displayBoard() 
 		{
@@ -212,6 +213,72 @@ public class Displays
 		{
 		List<Player> turnOrder = Arrays.asList(player, player2, enemy);
 	    Collections.sort(turnOrder, sorter);
+//	    while (stillPrinting)
+//	    	{
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    System.out.println();
+//		    break;
+//	    	}
+//	    stillPrinting=true;
 	    System.out.println("TURN ORDER:");
 	    for (Player p : turnOrder) 
 	    	{
