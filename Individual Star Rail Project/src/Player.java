@@ -5,6 +5,7 @@ public class Player
 	private double healthStat;
 	private int charge;
 	private double speed;
+
 	public Player(String n, double a, double h, int c, double s)
 		{
 		name = n;
@@ -13,6 +14,7 @@ public class Player
 		charge = c;
 		speed = s;
 		}
+
 	public String getName()
 		{
 		return name;
@@ -42,6 +44,7 @@ public class Player
 		{
 		this.healthStat = healthStat;
 		}
+
 	public int getCharge()
 		{
 		return charge;
@@ -49,8 +52,9 @@ public class Player
 
 	public void setCharge(int charge)
 		{
-		this.charge =charge;
+		this.charge = charge;
 		}
+
 	public double getSpeed()
 		{
 		return speed;
