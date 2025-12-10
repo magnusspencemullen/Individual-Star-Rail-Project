@@ -2,6 +2,9 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class Displays
 	{
@@ -21,6 +24,8 @@ public class Displays
 	public static double aoeMultiplier = 0;
 	public static SpeedSorter sorter = new SpeedSorter();
 	public static boolean stillPickingSkill = true;
+	static int className;
+	static JFrame frame = new JFrame();
 
 	public static void displayBoard()
 		{
@@ -37,34 +42,77 @@ public class Displays
 
 	public static void displayButtons()
 		{
-		while (true)
+//		while (true)
+//			{
+//			System.out.println("| Q |  | E |  | T |        | I |");
+//			System.out.println("Basic  Skill   Ult         Info");
+//			playerButtonInput = userStringInput.nextLine();
+//			if (playerButtonInput.equalsIgnoreCase("I"))
+//				{
+//				infoDisplay();
+//				} 
+//			else if (playerButtonInput.equalsIgnoreCase("E") && skillPoints == 0)
+//				{
+//				System.out.println("Insufficient skill points, try again!");
+//				System.out.println("_________________________________");
+//				} 
+//			else if (playerButtonInput.equalsIgnoreCase("T") && player.getCharge() < 100 && player2.getCharge() < 100)
+//				{
+//				System.out.println("Insufficient charge, try again!");
+//				System.out.println("_________________________________");
+//				} 
+//			else if (playerButtonInput.equalsIgnoreCase("Q") || playerButtonInput.equalsIgnoreCase("I") || playerButtonInput.equalsIgnoreCase("E") || playerButtonInput.equalsIgnoreCase("T"))
+//				{
+//				break;
+//				} 
+//			else
+//				{
+//				System.out.println("Wrong input! Please enter Q, E, T, or I.");
+//				System.out.println("_________________________________");
+//				}
+//			}
+		Object[] options = {"Basic", "Skill", "Ult", "Info"};
+		className = JOptionPane.showOptionDialog(
+				frame, 
+				"What action would you like to choose?",
+				"Your choices",
+				JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null, 
+				options, 
+				options[2]);  //makes third option the default
+		
+		switch(className)
 			{
-			System.out.println("| Q |  | E |  | T |        | I |");
-			System.out.println("Basic  Skill   Ult         Info");
-			playerButtonInput = userStringInput.nextLine();
-			if (playerButtonInput.equalsIgnoreCase("I"))
-				{
-				infoDisplay();
-				} 
-			else if (playerButtonInput.equalsIgnoreCase("E") && skillPoints == 0)
-				{
-				System.out.println("Insufficient skill points, try again!");
-				System.out.println("_________________________________");
-				} 
-			else if (playerButtonInput.equalsIgnoreCase("T") && player.getCharge() < 100 && player2.getCharge() < 100)
-				{
-				System.out.println("Insufficient charge, try again!");
-				System.out.println("_________________________________");
-				} 
-			else if (playerButtonInput.equalsIgnoreCase("Q") || playerButtonInput.equalsIgnoreCase("I") || playerButtonInput.equalsIgnoreCase("E") || playerButtonInput.equalsIgnoreCase("T"))
+			case 0:
 				{
 				break;
-				} 
-			else
-				{
-				System.out.println("Wrong input! Please enter Q, E, T, or I.");
-				System.out.println("_________________________________");
 				}
+			case 1:
+				{
+				if (skillPoints==0)
+					{
+					JOptionPane.showMessageDialog(
+							frame, 
+							"Insufficient skill points, try again!");
+					}
+				break;
+				}
+			case 2:
+				{
+				if (player.getCharge()<100 && player2.getCharge()<100)
+					{
+					JOptionPane.showMessageDialog(
+							frame, 
+							"Insufficient charge, try again!");
+					}
+				break;
+				}
+			case 3:
+				infoDisplay();
+			default:
+			JOptionPane.showMessageDialog(frame,
+                    "Wrong input! Please select Basic, Skill, Ult, or Info.");
 			}
 		}
 
