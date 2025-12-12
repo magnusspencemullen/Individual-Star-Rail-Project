@@ -26,6 +26,8 @@ public class Displays
 	public static boolean stillPickingSkill = true;
 	static int className;
 	static JFrame frame = new JFrame();
+	static int playing = 0;
+	static String nameShower;
 
 	public static void displayBoard()
 		{
@@ -71,48 +73,60 @@ public class Displays
 //				System.out.println("_________________________________");
 //				}
 //			}
-		Object[] options = {"Basic", "Skill", "Ult", "Info"};
-		className = JOptionPane.showOptionDialog(
-				frame, 
-				"What action would you like to choose?",
-				"Your choices",
-				JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null, 
-				options, 
-				options[2]);  //makes third option the default
-		
-		switch(className)
+		if (playing==1)
+			{
+			nameShower=player.getName()+"'s turn!";
+			}
+		else if (playing==2)
+			{
+			nameShower=player2.getName()+"'s turn!";
+			}
+		Object[] options =
+			{ "Basic", "Skill", "Ult", "Info" };
+		className = JOptionPane.showOptionDialog(frame, "What action would you like to choose?", nameShower,
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+		switch (className)
 			{
 			case 0:
 				{
+				playerButtonInput="Q";
 				break;
 				}
 			case 1:
 				{
-				if (skillPoints==0)
+				if (skillPoints == 0)
 					{
-					JOptionPane.showMessageDialog(
-							frame, 
-							"Insufficient skill points, try again!");
+					JOptionPane.showMessageDialog(frame, "Insufficient skill points, try again!");
+					displayButtons();
+					return;
 					}
+				playerButtonInput="E";
 				break;
 				}
 			case 2:
 				{
-				if (player.getCharge()<100 && player2.getCharge()<100)
+				if (player.getCharge() < 100 && player2.getCharge() < 100)
 					{
-					JOptionPane.showMessageDialog(
-							frame, 
-							"Insufficient charge, try again!");
+					JOptionPane.showMessageDialog(frame, "Insufficient charge, try again!");
+					displayButtons();
+					return;
 					}
+				playerButtonInput="T";
 				break;
 				}
 			case 3:
+				{
 				infoDisplay();
+				playerButtonInput="I";
+				displayButtons();
+				return;
+				}
 			default:
-			JOptionPane.showMessageDialog(frame,
-                    "Wrong input! Please select Basic, Skill, Ult, or Info.");
+				{
+				JOptionPane.showMessageDialog(frame, "Wrong input! Please select Basic, Skill, Ult, or Info.");
+				displayButtons();
+				return;
+				}
 			}
 		}
 
@@ -196,16 +210,14 @@ public class Displays
 				System.out.println(
 						"The enemy dealt " + enemy.getAttackStat() * multiplier + " damage to " + player.getName());
 				player.setCharge(player.getCharge() + 5);
-				} 
-			else if (enemyTargetChoice == 1)
+				} else if (enemyTargetChoice == 1)
 				{
 				multiplier = 1;
 				player2.setHealthStat(player2.getHealthStat() - enemy.getAttackStat() * multiplier);
 				System.out.println(
 						"The enemy dealt " + enemy.getAttackStat() * multiplier + " damage to " + player2.getName());
 				player2.setCharge(player2.getCharge() + 5);
-				} 
-			else if (enemyTargetChoice == 2)
+				} else if (enemyTargetChoice == 2)
 				{
 				multiplier = 1;
 				player.setHealthStat(player.getHealthStat() - enemy.getAttackStat() * multiplier);
@@ -226,8 +238,7 @@ public class Displays
 				System.out.println(
 						"The enemy dealt " + enemy.getAttackStat() * multiplier + " damage to " + player.getName());
 				player.setCharge(player.getCharge() + 10);
-				} 
-			else
+				} else
 				{
 				multiplier = 2;
 				player2.setHealthStat(player2.getHealthStat() - enemy.getAttackStat() * multiplier);
@@ -301,6 +312,7 @@ public class Displays
 				{
 				System.out.println(p.getName() + "'s turn!");
 				displayBoard();
+				playing=1;
 				displayButtons();
 				takeAction();
 				} 
@@ -314,6 +326,7 @@ public class Displays
 				{
 				System.out.println(p.getName() + "'s turn!");
 				displayBoard();
+				playing=2;
 				displayButtons();
 				SupportTakeAction();
 				}
@@ -323,6 +336,7 @@ public class Displays
 
 	public static void SupportTakeAction()
 		{
+		
 		if (playerButtonInput.equalsIgnoreCase("Q"))
 			{
 			multiplier = 1;
@@ -346,32 +360,59 @@ public class Displays
 			adjMultiplier = 1;
 			System.out.println("Used Skill");
 			System.out.println("_________________________________");
-			while (stillPickingSkill == true)
+//			while (stillPickingSkill == true)
+//				{
+//				System.out.println("Who do you target? |1|" + player.getName() + ", |2|" + player2.getName());
+//				String supportSkillInput = userStringInput.nextLine();
+//				if (supportSkillInput.equals("1"))
+//					{
+//					System.out.println(player.getName() + " was healed for " + player2.getAttackStat() * multiplier);
+//					player.setHealthStat(player.getHealthStat() + player2.getAttackStat() * multiplier);
+//					break;
+//					} 
+//				else if (supportSkillInput.equals("2"))
+//					{
+//					System.out.println(player2.getName() + " was healed for " + player2.getAttackStat() * multiplier);
+//					player2.setHealthStat(player2.getHealthStat() + player2.getAttackStat() * multiplier);
+//					break;
+//					} 
+//				else
+//					{
+//					System.out.println("Wrong input! Try again.");
+//					}
+//				}
+				player2.setCharge(player2.getCharge() + 35);
+				skillPoints -= 1;
+				
+				Object[] options =
+							{ player.getName(), player2.getName() };
+						className = JOptionPane.showOptionDialog(frame, "Who do you target?", nameShower,
+								JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+						switch (className)
+							{
+							case 0:
+								{
+								System.out.println(player.getName() + " was healed for " + player2.getAttackStat() * multiplier);
+								player.setHealthStat(player.getHealthStat() + player2.getAttackStat() * multiplier);
+								break;
+								}
+							case 1:
+								{
+								System.out.println(player2.getName() + " was healed for " + player2.getAttackStat() * multiplier);
+								player2.setHealthStat(player2.getHealthStat() + player2.getAttackStat() * multiplier);
+								break;
+								}
+							default:
+								{
+								System.out.println("Wrong input! Try again.");
+								return;
+								}
+							}
+						player2.setCharge(player2.getCharge() + 35);
+						skillPoints -= 1;
+				} 
+			else if (playerButtonInput.equalsIgnoreCase("T") && player2.getCharge() >= 100)
 				{
-				System.out.println("Who do you target? |1|" + player.getName() + ", |2|" + player2.getName());
-				String supportSkillInput = userStringInput.nextLine();
-				if (supportSkillInput.equals("1"))
-					{
-					System.out.println(player.getName() + " was healed for " + player2.getAttackStat() * multiplier);
-					player.setHealthStat(player.getHealthStat() + player2.getAttackStat() * multiplier);
-					break;
-					} 
-				else if (supportSkillInput.equals("2"))
-					{
-					System.out.println(player2.getName() + " was healed for " + player2.getAttackStat() * multiplier);
-					player2.setHealthStat(player2.getHealthStat() + player2.getAttackStat() * multiplier);
-					break;
-					} 
-				else
-					{
-					System.out.println("Wrong input! Try again.");
-					}
-				}
-			player2.setCharge(player2.getCharge() + 35);
-			skillPoints -= 1;
-			} 
-		else if (playerButtonInput.equalsIgnoreCase("T") && player2.getCharge() >= 100)
-			{
 			multiplier = 3;
 			adjMultiplier = 1.5;
 			System.out.println("Used Ultimate");
